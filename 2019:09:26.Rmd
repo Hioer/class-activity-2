@@ -1,0 +1,47 @@
+---
+title: "2019/09/26"
+author: "Han"
+date: "9/26/2019"
+output: html_document
+---
+
+```{r}
+hist(D2$frl_percent)
+
+hist(D2$frl_percent, breaks = 100)
+
+hist(D2$frl_percent, breaks = 100, ylim = c(0, 30), plot = TRUE)
+
+hist(D2$frl_percent, breaks = c(0, 10, 20, 80, 100))
+```
+
+```{r}
+plot(D2$ell_num, D2$ctt_num)
+
+x <- c(sample(1:9, 7, replace = TRUE))
+y <- c(sample(1:9, 7, replace = TRUE))
+
+t1 <- table(x, y)
+
+barplot(t1)
+
+library(tidyr)
+library(dplyr)
+D3 <- D1 %>% group_by(schoolyear) %>% summarise(mean(total_enrollment))
+plot(D3$schoolyear, D3$`mean(total_enrollment)`, type = "l")
+
+D4 <- filter(D1, DBN == "01M015"| DBN == "01M019"| DBN == "01M020")
+D4 <- droplevels(D4)
+boxplot(D4$total_enrollment ~ D4$DBN)
+
+```
+
+```{r}
+D5 <- D2[,c(5, 6, 21:24)]
+pairs(D5)
+```
+
+```{r}
+
+```
+

@@ -15,9 +15,9 @@ D2 <- filter(D1, schoolyear == 20112012)
 
 #Histograms
 ```{r}
-#Generate a histogramof the percentage of free/reduced lunch students (frl_percent) at each school
+#Generate a histogram of the percentage of free/reduced lunch students (frl_percent) at each school
 
-hist()
+hist(D2$frl_percent)
 
 #Change the number of breaks to 100, do you get the same impression?
 
@@ -53,6 +53,7 @@ barplot(table1)
 
 #Create a data frame of the average total enrollment for each year and plot the two against each other as a lines
 
+library(dplyr)
 library(tidyr)
 D3 <- D1 %>% group_by(schoolyear) %>% summarise(mean_enrollment = mean(total_enrollment))
 
@@ -60,10 +61,12 @@ plot(D3$schoolyear, D3$mean_enrollment, type = "l", lty = "dashed")
 
 #Create a boxplot of total enrollment for three schools
 D4 <- filter(D1, DBN == "31R075"|DBN == "01M015"| DBN == "01M345")
+
 #The drop levels command will remove all the schools from the variable with not data  
 D4 <- droplevels(D4)
 boxplot(D4$total_enrollment ~ D4$DBN)
 ```
+
 #Pairs
 ```{r}
 #Use matrix notation to select columns 5,6, 21, 22, 23, 24
@@ -81,13 +84,17 @@ pairs(D5)
 #round rounds numbers to whole number values
 #sample draws a random samples from the groups vector according to a uniform distribution
 
+scores <- rnorm(100, 75, 20)
+scores <- pmax(1, pmin(100, scores))
+
+D6 <- data.frame("scores" = round(scores), "group" = sample(c("sport","nature","literature", "music"), 100, replace = TRUE))
 
 ```
 
 2. Using base R commands, draw a histogram of the scores. Change the breaks in your histogram until you think they best represent your data.
 
 ```{r}
-
+hist(D6$scores, breaks = 40, main = "Performance")
 ```
 
 
@@ -96,6 +103,8 @@ pairs(D5)
 ```{r}
 #cut() divides the range of scores into intervals and codes the values in scores according to which interval they fall. We use a vector called `letters` as the labels, `letters` is a vector made up of the letters of the alphabet.
 
+var <- D6$scores
+cut(var, fivenum(var), letters[1:4])
 ```
 
 4. Now using the colorbrewer package (RColorBrewer; http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3) design a pallette and assign it to the groups in your data on the histogram.
@@ -108,7 +117,7 @@ library(RColorBrewer)
 #Make RColorBrewer palette available to R and assign to your bins
 
 #Use named palette in histogram
-
+hist(D6$scores, breaks = 40, col = brewer.pal(10,"Set3"), main = "palette")
 ```
 
 
@@ -116,35 +125,37 @@ library(RColorBrewer)
 
 ```{r}
 #Make a vector of the colors from RColorBrewer
-
+col <- brewer.pal(4, "Blues")
+boxplot(D6$scores ~ D6$group, col = col)
 ```
 
 
 6. Now simulate a new variable that describes the number of logins that students made to the educational game. They should vary from 1-25.
 
 ```{r}
-
+lg <- sample(1:25, 100, replace = TRUE)
 ```
 
 7. Plot the relationships between logins and scores. Give the plot a title and color the dots according to interest group.
 
 ```{r}
-
-
+plot(lg, var, type = "p", main = "relation", col=D6$group)
 ```
 
 
 8. R contains several inbuilt data sets, one of these in called AirPassengers. Plot a line graph of the the airline passengers over time using this data set.
 
 ```{r}
-
+DA <- AirPassengers
+plot(DA)
 ```
 
 
 9. Using another inbuilt data set, iris, plot the relationships between all of the variables in the data set. Which of these relationships is it appropraiet to run a correlation on? 
 
 ```{r}
-
+Di <- iris
+pairs(Di)
 ```
 
 10. Finally use the knitr function to generate an html document from your work. If you have time, try to change some of the output using different commands from the RMarkdown cheat sheet.
